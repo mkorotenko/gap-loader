@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
+	<base id="myBase" href="http://127.0.0.1:31999/loader_1.6.0.0/">
+	<title>2k Loader</title>
+	<link rel="stylesheet" href="loader.css" />
+	<script type="text/javascript" src="cordova-1.5.0.js"></script>
+	<script type="text/javascript">
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		function setVisibility(active){
+			document.getElementsByName('GoToLink')[0].disabled=!active;
+		};
+		
+		function getScript(url,success){
+			var script=document.createElement('script');
+			script.src=url;
+			var head=document.getElementsByTagName('head')[0],
+			done=false;
+			script.onload=script.onreadystatechange = function(){
+				if ( !done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete') ) {
+					done=true;
+					if(success) success();
+					script.onload = script.onreadystatechange = null;
+					//head.removeChild(script);
+				}
+			};
+			script.onerror=function(error){
+				setVisibility(true);
+				navigator.notification.alert('Не удалось выполнить.',undefined,'Ошибка загрузчика');
+			};
+			head.appendChild(script);
+		};
+	  
+		window.deviceModule = {
+			autoLoad : true,
+			onBackButton : function(){
+				if(window.deviceModule.backButtonHash) window.deviceModule.backButtonHash.call();
+				else{
+					//navigator.notification.beep(1);
+					var onConfirm=function(result){
+						//ui.log('EVENT Answer '+result);
+						if(result==1){
+							navigator.app.exitApp()
+						}
+						else{
+							return false;
+						};
+					};
+					//ui.log('EVENT Подтверждение "Закрыть приложение?"');
+					navigator.notification.confirm('Закрыть приложение?',onConfirm,'Подтвердите','Да,Отмена');
+				};
+			},
+			onMenuButton : function(){
+				if(window.deviceModule.menuButtonHash) window.deviceModule.menuButtonHash.call();
+				else{
+					navigator.app.clearCache();
+					location.reload();
+				};
+			},
+			path : {},
+			parseUrl : function(url) {
+				if ( typeof url === "object" ) {
+					return url;
+				}
+				var urlParseRE= /^(((([^:\/#\?]+:)?(?:(\/\/)((?:(([^:@\/#\?]+)(?:\:([^:@\/#\?]+))?)@)?(([^:\/#\?\]\[]+|\[[^\/\]@#?]+\])(?:\:([0-9]+))?))?)?)?((\/?(?:[^\/\?#]+\/+)*)([^\?#]*)))?(\?[^#]+)?)(#.*)?/;
+				var matches = urlParseRE.exec( url || "" ) || [];
+				return {
+					href:         matches[  0 ] || "",
+					hrefNoHash:   matches[  1 ] || "",
+					hrefNoSearch: matches[  2 ] || "",
+					domain:       matches[  3 ] || "",
+					protocol:     matches[  4 ] || "",
+					doubleSlash:  matches[  5 ] || "",
+					authority:    matches[  6 ] || "",
+					username:     matches[  8 ] || "",
+					password:     matches[  9 ] || "",
+					host:         matches[ 10 ] || "",
+					hostname:     matches[ 11 ] || "",
+					port:         matches[ 12 ] || "",
+					pathname:     matches[ 13 ] || "",
+					directory:    matches[ 14 ] || "",
+					filename:     matches[ 15 ] || "",
+					search:       matches[ 16 ] || "",
+					hash:         matches[ 17 ] || ""
+				};
+			},			
+			goToLink : function(){
+				var href=document.getElementsByName('ServerPath')[0].value;
+				if(!href||href=='http://') href='file:///android_asset/www/pad_smg';
+				var path=window.deviceModule.parseUrl(href);
+				window.deviceModule.path = {};
+				if(!path.domain) {
+					navigator.notification.alert('Не верно указан адрес.'); 
+					return false;
+				};
+				setVisibility(false);
+				window.deviceModule.path=path;
+				try{
+				  document.getElementById("myBase").href = href+'/';
+					getScript(window.deviceModule.path.href+'/2kLoader.js',window.deviceModule.savePaths);
+				}
+				catch (err) {
+					setVisibility(true);
+					navigator.notification.alert(err,undefined,'Ошибка загрузчика');
+				};
+			},
+			cancel : function(){
+				window.location.reload(true);
+			},
+			paths : [],
+			savePaths : function(){
+				var paths=[window.deviceModule.path.href||''];
+				window.localStorage.setItem("path", paths.join(';\n'));
+			},
+			readPaths : function(success,error){
+				var evt={
+					target : {
+						result : window.localStorage.getItem("path")
+					}
+				};
+				if(success) success.call(this,evt);
+			},
+		};
+		
+		var onPathsNotFound=function(evt){
+			if(evt.code!=1&&evt.code!=12) return false;
+			var paths=[];
+			paths.push('http://10.1.162.99/pad');
+			window.deviceModule.path=window.deviceModule.parseUrl(paths[0]);
+			document.getElementsByName('ServerPath')[0].value=window.deviceModule.path.href;
+		};
+		
+		function onDeviceReady() {
+			document.addEventListener("backbutton", window.deviceModule.onBackButton, false);
+			document.addEventListener("menubutton", window.deviceModule.onMenuButton, false);
+			navigator.notification.beep(1);
+			console.log("PhoneGap ready.");
+			window.deviceModule.readPaths(function(evt){
+				if(!evt.target.result||evt.target.result=='null'||(typeof evt.target.result!='string')) {
+					onPathsNotFound({code:1});
+					return false;
+				};
+				var paths=evt.target.result.split(';\n');
+				window.deviceModule.path=window.deviceModule.parseUrl(paths[0]);
+				document.getElementsByName('ServerPath')[0].value=window.deviceModule.path.href;
+				if(!window.deviceModule.path.domain) return false;
+				if(window.deviceModule.autoLoad) window.deviceModule.goToLink();
+			}, onPathsNotFound);
+		};
+	</script>
+</head>
+<body>
+	<div class="loader-page">
+		
+		<div style="text-align: center;">
+			<span class="Apple-tab-span" style="white-space:pre"></span>
+			<table width="100%" border="0" cellpadding="2">
+			  <tr>
+			    <td><h4 style="text-align: center;">2К:Ресторан</h4></td>
+		      </tr>
+			  <tr>
+			    <td>Сервер приложения:&nbsp;
+		        <input type="text" name="ServerPath" value="http://" style="width: 60%;"></td>
+		      </tr>
+			  <tr>
+			    <td><input type="submit" name="GoToLink" value="Выполнить" onclick="window.deviceModule.goToLink()" style="height: 3em;">
+			    <input type="submit" name="Cancel" value="Отмена" onclick="window.deviceModule.cancel()" style="height: 3em;"></td>
+		      </tr>
+		  </table>
+      </div>
+	</div>
+</body>
+</html>

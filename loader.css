@@ -1,0 +1,10 @@
+
+.loader-page {
+	background: #F0F0F0;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#EEE),to(#DDD));
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}

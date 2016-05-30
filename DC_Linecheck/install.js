@@ -92,8 +92,8 @@
 		this.updating = false;
 		this.error = false;
 		this.ready = false;
-		if(window.$) this['def']=$.Deferred();
-		if(window.$) this['evl']=$.Deferred();
+		// if(window.$) this['def']=$.Deferred();
+		// if(window.$) this['evl']=$.Deferred();
 
 		this.update = function(passData,postMethod) { 
 			if (that.updating===true) { return false; }
@@ -115,14 +115,14 @@
 				}                                                      
 			  };                                                        
 			  var timestamp = new Date(),
-			  uri;
+			    uri;
 			  if (postMethod=='POST') {
-  				uri=urlCall+'?'+timestamp.getTime();
+  				uri=(urlCall||'')+'?'+timestamp.getTime();
   				AJAX.open("POST", uri, true);
   				AJAX.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   				AJAX.send(passData);
   			} else {
-  				uri=urlCall+'?'+passData+'×tamp='+(timestamp*1); 
+  				uri=(urlCall||'')+'?'+passData+'×tamp='+(timestamp*1); 
   				AJAX.open("GET", uri, true);                             
   				AJAX.send(null);                                         
 			  }              

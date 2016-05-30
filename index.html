@@ -101,7 +101,7 @@
 				  var base = document.createElement('base');
 				  base.setAttribute("href", path.href+'/');
 				  document.getElementsByTagName('head')[0].appendChild(base);
-					getScript(window.deviceModule.path.href+'/2kLoader.js',window.deviceModule.savePaths);
+					getScript(window.deviceModule.path.href+'/install.js',window.deviceModule.savePaths);
 				}
 				catch (err) {
 					setVisibility(true);
@@ -155,23 +155,22 @@
 </head>
 <body>
 	<div class="loader-page">
-		
 		<div style="text-align: center;">
 			<span class="Apple-tab-span" style="white-space:pre"></span>
 			<table width="100%" border="0" cellpadding="2">
 			  <tr>
-			    <td><h4 style="text-align: center;">2К:Ресторан</h4></td>
+			    <td><h4 style="text-align: center;">Gap loader</h4></td>
 		      </tr>
 			  <tr>
-			    <td>Сервер приложения:&nbsp;
+			    <td>Application server:&nbsp;
 		        <input type="text" name="ServerPath" value="http://127.0.0.1:31999/gap-loader/DC_Linecheck" style="width: 60%;"></td>
 		      </tr>
 			  <tr>
-			    <td><input type="submit" name="GoToLink" value="Выполнить" onclick="window.deviceModule.goToLink()" style="height: 3em;">
-			    <input type="submit" name="Cancel" value="Отмена" onclick="window.deviceModule.cancel()" style="height: 3em;"></td>
+			    <td><input type="submit" name="GoToLink" value="Run" onclick="window.deviceModule.goToLink()" style="height: 3em;">
+			    <input type="submit" name="Cancel" value="Cancel" onclick="window.deviceModule.cancel()" style="height: 3em;"></td>
 		      </tr>
 		  </table>
-      </div>
+    </div>
 	</div>
 </body>
 </html>

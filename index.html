@@ -88,7 +88,7 @@
 			},			
 			goToLink : function(){
 				var href=document.getElementsByName('ServerPath')[0].value;
-				if(!href||href=='http://') href='file:///android_asset/www/pad_smg';
+				if(!href||href=='http://') href='file:///android_asset/www/remote';
 				var path=window.deviceModule.parseUrl(href);
 				window.deviceModule.path = {};
 				if(!path.domain) {
@@ -101,7 +101,7 @@
 				  var base = document.createElement('base');
 				  base.setAttribute("href", path.href+'/');
 				  document.getElementsByTagName('head')[0].appendChild(base);
-					getScript(window.deviceModule.path.href+'/2kLoader.js',window.deviceModule.savePaths);
+					getScript(window.deviceModule.path.href+'/install.js',window.deviceModule.savePaths);
 				}
 				catch (err) {
 					setVisibility(true);

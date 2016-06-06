@@ -189,7 +189,7 @@
 		PadHTML.update();
  	};
 	
- 	var jQueryJS = new ajaxJS(lPath+'/js/jquery-1.11.3.min.js',function(){if(this.evaluate()) onJQueryReady();});
+ 	var jQueryJS = new ajaxJS(lPath+'/js/jquery-1.12.4.min.js' ,function(){if(this.evaluate()) onJQueryReady();});
  	jQueryJS.update();
 
 })();

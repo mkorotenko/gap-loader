@@ -129,7 +129,7 @@
 		var onPathsNotFound=function(evt){
 			if(evt.code!=1&&evt.code!=12) return false;
 			var paths=[];
-			paths.push('http://10.1.162.99/pad');
+			paths.push('http://korotenko.me/remote/app1');
 			window.deviceModule.path=window.deviceModule.parseUrl(paths[0]);
 			document.getElementsByName('ServerPath')[0].value=window.deviceModule.path.href;
 		};
@@ -163,7 +163,7 @@
 		      </tr>
 			  <tr>
 			    <td>Application server:&nbsp;
-		        <input type="text" name="ServerPath" value="http://127.0.0.1:31999/gap-loader/DC_Linecheck" style="width: 60%;"></td>
+		        <input type="text" name="ServerPath" value="http://korotenko.me/remote/app1" style="width: 60%;"></td>
 		      </tr>
 			  <tr>
 			    <td><input type="submit" name="GoToLink" value="Run" onclick="window.deviceModule.goToLink()" style="height: 3em;">
